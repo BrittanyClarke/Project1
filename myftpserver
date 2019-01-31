@@ -1,0 +1,107 @@
+//main.cpp                                                                                                                                                                                                  
+#include <netdb.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(int argc, char* argv[]) {
+
+  //Create the port that the server is going to run on                                                                                                                                                      
+  int servPort;
+  try{
+    servPort = stoi(argv[1]);
+  }
+  catch(std::exception& e){
+    cerr << "Server port creation failed. Please enter a valid socket." << endl;
+    return -1;
+  }
+
+  if(servPort < 1){
+    cerr << "Server port creation failed. Please enter a valid socket." << endl;
+    return -1;
+  }
+
+  //Create a socket                                                                                                                                                                                         
+  int listening = socket(AF_INET, SOCK_STREAM, 0);
+
+  //Create error message if socket cannot be created, & exit.                                                                                                                                               
+  if(listening == -1){
+    cerr << "Socket cannot be created." << endl;
+    return -1;
+  }
+
+  //Bind the socket for IP/Port                                                                                                                                                                             
+  //Assign IP, Port                                                                                                                                                                                         
+  sockaddr_in hint; //sockaddr_in is for IPv4                                                                                                                                                               
+  hint.sin_family = AF_INET;
+  hint.sin_port = htons(servPort); //Since this is an Intel processor, this address is written in little-endian format, hence the need for "htons"                                                          
+  inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr); //pton, Internet command, which is a pointer to a string to a number. Converts number to an array of integers. 127.0.0.1                                   
+
+  //Check if binding was successful                                                                                                                                                                         
+  if(bind(listening, (sockaddr*)&hint, sizeof(hint)) == -1){
+    cerr << "Cannot bind to IP/Port" << endl;
+    return -1;
+  }
+  //Mark socket for listening                                                                                                                                                                               
+  if(listen(listening, SOMAXCONN) == -1) { //SOMAXCONN = maximum number of connections                                                                                                                      
+    cerr << "Cannot listen." << endl;
+   return -1;
+  }
+  //Accept call                                                                                                                                                                                             
+  sockaddr_in client;
+  socklen_t clientSize;
+  char host[NI_MAXHOST];
+  char svc[NI_MAXSERV];
+
+  int clientSocket = accept(listening, (sockaddr*)&client, &clientSize);
+  if(clientSocket == -1){
+    cerr << "Cannnot connect due to an issue with client connecting." << endl;
+    return -1;
+  }
+
+  //Close listening socket                                                                                                                                                                                  
+  close(listening);
+  memset(host, 0, NI_MAXHOST);
+  memset(svc, 0, NI_MAXSERV);
+
+  int result = getnameinfo((sockaddr*)&client, sizeof(client), host, NI_MAXHOST, svc, NI_MAXSERV, 0);
+
+  if(result){
+    cout << host << "Connected on: " << svc << endl;
+  }
+  else{
+    inet_ntop(AF_INET, &client.sin_addr, host, NI_MAXHOST);
+    cout << host << "Connected on: " << ntohs(client.sin_port) << endl;
+  }
+
+  //Loop: while receiving, display message, echo message                                                                                                                                                    
+  char buf[4096];
+  while(true){
+    //Clear the buffer                                                                                                                                                                                      
+    memset(buf, 0, 4096);
+    //Wait for message                                                                                                                                                                                      
+    int bytesRecv = recv(clientSocket, buf, 4096, 0);
+    if(bytesRecv == -1){
+      cerr << "There was a connection issue." << endl;
+      break;
+    }
+    if(bytesRecv == 0){
+      cout << "The client disconnected." << endl;
+      break;
+    }
+
+    //Display message                                                                                                                                                                                       
+    cout << "Received: " << string(buf, 0, bytesRecv) << endl;
+    //Resend message                                                                                                                                                                                        
+    send(clientSocket, buf, bytesRecv+1, 0);
+
+  }
+  //Close the socket                                                                                                                                                                                        
+  close(clientSocket);
+  return 0;
+}
