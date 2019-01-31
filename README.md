@@ -1,7 +1,9 @@
 # Project1
 README
-Distributed Systems — Project 1: Simple FTP Client and Server\n
+Distributed Systems — Project 1: Simple FTP Client and Server 
+
 Created by: Brittany Clarke, Anokhi Patel, and Afua Acheampong
+
 This project was done in its entirety by Brittany Clarke, Anokhi Patel, and Afua Acheampong. We hereby
 state that we have not received unauthorized help of any form. 
 
