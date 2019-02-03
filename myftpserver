@@ -7,6 +7,10 @@
 #include <sys/socket.h>
 #include <iostream>
 #include <string>
+#include <sys/stat.h>
+#include <vector>
+#include <algorithm>
+#include <dirent.h>
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -95,10 +99,108 @@ int main(int argc, char* argv[]) {
       break;
     }
 
-    //Display message                                                                                                                                                                                       
-    cout << "Received: " << string(buf, 0, bytesRecv) << endl;
-    //Resend message                                                                                                                                                                                        
-    send(clientSocket, buf, bytesRecv+1, 0);
+    //Display message                                 
+	string userInput;
+	userInput = string(buf,0,bytesRecv);
+	cout<<"Here is the user's input: "<<userInput<<endl;
+	if(userInput == "pwd"){
+		long path_max;
+		size_t size;
+		char *ptr;
+		char *buffer;
+		// turn off buffering for cout
+		std::cout.setf(std::ios::unitbuf);
+		path_max = pathconf(".", _PC_PATH_MAX);
+		if (path_max == -1)
+			size = 1024;
+		else if (path_max > 10240)
+			size = 10240;
+		else
+			size = path_max;
+
+		for (buffer = ptr = NULL; ptr == NULL; size *= 2){
+			ptr = getcwd(buffer, size);
+		}
+		cout<<ptr<<endl;		
+		//Resend message                                                                                                                                                                               
+		send(clientSocket, ptr, 4096, 0);
+		free(ptr);
+		free(buffer);
+	}
+
+	if(userInput == "ls"){
+		bool a = false;
+		const char *dirname="./";
+		vector<char*> cvec;
+		DIR * dirp = opendir(dirname);
+		struct dirent * direntp = nullptr;
+		//const char * pathname;
+		string dir(dirname);
+		string path;
+		
+		while((direntp = readdir(dirp)) != nullptr)
+		{
+			if(a == false)
+			{
+				if((!strcmp(direntp->d_name, ".")) || (!strcmp(direntp->d_name, "..")))
+				{
+					continue;
+				}
+				else if((!strcmp(direntp->d_name, "/")) || (!strcmp(direntp->d_name, "//")))
+				{
+					continue;
+				}
+				
+				if((!strncmp(direntp->d_name, ".", 1)))
+				{
+					continue;
+				}
+			}
+			
+			cvec.push_back(direntp->d_name);
+		}
+		
+		std::sort(std::begin(cvec),std::end(cvec), [](std::string const &name1, std::string const &name2){
+			return name1 < name2;
+		});
+		
+		for(unsigned int i = 0; i < cvec.size(); i++)
+		{
+			printf(cvec[i]);
+			
+			send(clientSocket, cvec[i], 4096, 0);
+			printf("\n");
+		}
+		closedir(dirp);
+	}
+	size_t found = userInput.find("mkdir");
+	if(found!=string::npos){
+		size_t pos = 1 + userInput.find(' ');
+		size_t pos2 = userInput.find(' ', pos);
+		string dirName = userInput.substr(pos, pos2-pos);
+		mkdir(dirName.c_str(), 0777);
+		send(clientSocket, "Directory Created", 4096, 0);
+	}
+	
+	size_t cdFound = userInput.find("cd");
+	if(cdFound !=string::npos){
+		size_t pos = 1 + userInput.find(' ');
+		size_t pos2 = userInput.find(' ', pos);
+		string loc = userInput.substr(pos, pos2-pos);
+		if(loc ==".."){
+			chdir("..");
+			
+		}
+		else{
+			chdir(loc.c_str());
+			
+		}
+		
+		send(clientSocket, "Changed Directory", 4096, 0);
+	}
+	
+    //Resend message                                                                                                                                                                               
+   // send(clientSocket, buf, bytesRecv+1, 0);
 
   }
   //Close the socket                                                                                                                                                                                        
