@@ -5,7 +5,8 @@ Distributed Systems — Project 1: Simple FTP Client and Server
 Created by: Brittany Clarke, Anokhi Patel, and Afua Acheampong
 
 This project was done in its entirety by Brittany Clarke, Anokhi Patel, and Afua Acheampong. We hereby
-state that we have not received unauthorized help of any form. 
+state that we have not received unauthorized help of any form.
+This Simple FTP Client and Server project allows a server and client to interact with each other. We implemented this project using a single-threading at the server's end using TCP socket. This project allows the client to type in commands to view information on the server's side. As well in this project, it is assumed that the client inputs correct commands.
 
 
 Starting the Server and Client:
@@ -18,6 +19,22 @@ EXAMPLE: To start the client on the sever’s machine address, enter “127.0.0.
 
 
 Commands:
+
+
+ls: To view all the files and subdirectories within the current remote directory, type 'ls' and hit 'enter'
+EXAMPLE: myftp> ls
+
+cd ..: To change to the parent directory of the remote directory, type 'cd ..' and hit 'enter'
+EXAMPLE: myftp> cd ..
+
+cd <directory_name>: To change to a subdirectory within the current remote directory, type 'cd <directory_name>' and hit 'enter'
+EXAMPLE: myftp> cd <directory_name>
+
+mkdir <directory_name>: To create a subdirectory within the current remote directory, type 'mkdir <directory_name>' and hit 'enter'
+EXAMPLE: myftp> mkdir <directory_name>
+
+pwd: To view the current working remote directory, type 'pwd' and hit 'enter'
+EXAMPLE: myftp> pwd
 
 quit: To quit the client, type ‘quit’ and hit ‘enter’.
 EXAMPLE: mytftp> quit
