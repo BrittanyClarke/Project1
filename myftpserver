@@ -103,6 +103,11 @@ int main(int argc, char* argv[]) {
 	string userInput;
 	userInput = string(buf,0,bytesRecv);
 	cout<<"Here is the user's input: "<<userInput<<endl;
+	
+	/**
+	 * if the user inputs pwd, it will print out the present
+	 * working directory of the server
+	 */
 	if(userInput == "pwd"){
 		long path_max;
 		size_t size;
@@ -128,6 +133,10 @@ int main(int argc, char* argv[]) {
 		free(buffer);
 	}
 
+	/**
+	 * if the user inputs ls, it will print out files and
+	 * directories within the pwd... not including hidden files
+	 */
 	if(userInput == "ls"){
 		bool a = false;
 		const char *dirname="./";
@@ -173,6 +182,12 @@ int main(int argc, char* argv[]) {
 		}
 		closedir(dirp);
 	}
+	
+	/**
+	 * if the user inputs mkdir, it should include the name of
+	 * the directory to create and will output "Created" once
+	 * the directory is created... you can view this by typing pwd
+	 */
 	size_t found = userInput.find("mkdir");
 	if(found!=string::npos){
 		size_t pos = 1 + userInput.find(' ');
@@ -182,6 +197,14 @@ int main(int argc, char* argv[]) {
 		send(clientSocket, "Created", 7, 0);
 	}
 	
+	/**
+	 * if the user inputs cd, they should include '..' or
+	 * <directory_name>, and it will change the directory
+	 * location appropriately.. assuming that there is a
+	 * directory of the name they type in.. once it changes
+	 * directories, it will out "Changed"... you can view this
+	 * by typing pwd
+	 */
 	size_t cdFound = userInput.find("cd");
 	if(cdFound !=string::npos){
 		size_t pos = 1 + userInput.find(' ');
@@ -197,10 +220,6 @@ int main(int argc, char* argv[]) {
 		}
 		send(clientSocket, "Changed", 7, 0);
 	}
-	
-    //Resend message                                                                                                                                                                               
-   // send(clientSocket, buf, bytesRecv+1, 0);
-
   }
   //Close the socket                                                                                                                                                                                        
   close(clientSocket);
