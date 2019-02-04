@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
 		size_t pos2 = userInput.find(' ', pos);
 		string dirName = userInput.substr(pos, pos2-pos);
 		mkdir(dirName.c_str(), 0777);
-		send(clientSocket, "Directory Created", 4096, 0);
+		send(clientSocket, "Created", 7, 0);
 	}
 	
 	size_t cdFound = userInput.find("cd");
@@ -195,8 +195,7 @@ int main(int argc, char* argv[]) {
 			chdir(loc.c_str());
 			
 		}
-		
-		send(clientSocket, "Changed Directory", 4096, 0);
+		send(clientSocket, "Changed", 7, 0);
 	}
 	
     //Resend message                                                                                                                                                                               
