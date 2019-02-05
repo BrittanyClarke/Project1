@@ -1,4 +1,4 @@
-//myftpserver.cpp                                                                                                                                                                                                
+//myftpserver.cpp                                                                                                                                                                                                  
 #include <netdb.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <dirent.h>
 #include <stdio.h>
+#include <fcntl.h>
+
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -237,6 +239,90 @@ int main(int argc, char* argv[]) {
 		send(clientSocket, output, 256, 0);
 		closedir(dirp);
 	}
+	
+	
+	/**
+	 * if the user inputs get, they must include the filename,
+	 * in which the file exists in the local directory as well.
+	 * then it copies the information within the remote file and
+	 * copies it into the local directory
+	 */
+	size_t getFound = userInput.find("get");
+	if(getFound !=string::npos){
+		//converts the file name into a string
+		size_t posG = 1 + userInput.find(' ');
+		size_t pos2G = userInput.find(' ', posG);
+		string fileName = userInput.substr(posG, pos2G-posG);
+		
+		//where to find the client's directory and combine with file name
+		string dirPath = "../ftpClient/";
+		string localPathString = dirPath.append(fileName);
+		
+		//convert files into chars to use appropriately when copying the file info
+		const char * fileCharLocal = localPathString.c_str();
+		const char * fileCharRemote = fileName.c_str();
+		int fd2 = open(fileCharLocal, O_TRUNC);
+		int count=0;
+		char buffer[256];
+		int fd1 = open(fileCharRemote,O_RDWR);
+		fd2 = open(fileCharLocal,O_RDWR);
+		ssize_t n= read(fd1,buffer,256);
+		while(n>0){
+			if(n<0){
+				send(clientSocket, "Error", 5, 0);
+				break;
+			}
+			count+=n+1;
+			ssize_t numbytes=(size_t) n;
+			n=write(fd2, buffer,numbytes);
+			n=read(fd1, buffer, 256);
+		}
+		send(clientSocket, "Copied to Local", 15, 0);
+		close(fd1);
+		close(fd2);
+	}
+	
+	/**
+	 * if the user inputs put, they must include the filename,
+	 * in which the file exists in the remote directory as well.
+	 * then it copies the information within the local file and
+	 * copies it into the remote directory
+	 */
+	size_t putFound = userInput.find("put");
+	if(putFound !=string::npos){
+		//converts the file name into a string
+		size_t posP = 1 + userInput.find(' ');
+		size_t pos2P = userInput.find(' ', posP);
+		string fileName = userInput.substr(posP, pos2P-posP);
+		
+		//where to find the client's directory and combine with file name
+		string dirPath = "../ftpClient/";
+		string localPathString = dirPath.append(fileName);
+		
+		//convert files into chars to use appropriately when copying the file info
+		const char * fileCharLocal = localPathString.c_str();
+		const char * fileCharRemote = fileName.c_str();
+		int fd2 = open(fileCharRemote, O_TRUNC);
+		int count=0;
+		char buffer[256];
+		int fd1 = open(fileCharLocal,O_RDWR);
+		fd2 = open(fileCharRemote,O_RDWR);
+		ssize_t n= read(fd1,buffer,256);
+		while(n>0){
+			if(n<0){
+				send(clientSocket, "Error", 5, 0);
+				break;
+			}
+			count+=n+1;
+			ssize_t numbytes=(size_t) n;
+			n=write(fd2, buffer,numbytes);
+			n=read(fd1, buffer, 256);
+		}
+		send(clientSocket, "Copied to Remote", 16, 0);
+		close(fd1);
+		close(fd2);
+	}
+	
   }
   //Close the socket                                                                                                                                                                                        
   close(clientSocket);
