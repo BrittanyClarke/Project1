@@ -1,11 +1,12 @@
-all: myftpserver
+all: myftpclient
 
-myftpserver: myftpserver.o
-	g++ -o  myftpserver myftpserver.o
+myftpclient.o: myftpclient.cpp
+	g++ -Wall -std=c++14 -g -O0 -pedantic-errors -c myftpclient.cpp
 
-myftpserver.o: myftpserver.cpp
-	g++ -Wall -g -c myftpserver.cpp
+myftpclient: myftpclient.o
+	g++ -o myftpclient myftpclient.o
 
-clean: 
-	rm -f myftpserver
-	rm -f myftpserver.o
+clean:
+	rm -f myftpclient
+	rm -f myftpclient.o
+
