@@ -8,14 +8,16 @@ This project was done in its entirety by Brittany Clarke, Anokhi Patel, and Afua
 state that we have not received unauthorized help of any form.
 This Simple FTP Client and Server project allows a server and client to interact with each other. We implemented this project using a single-threading at the server's end using TCP socket. This project allows the client to type in commands to view information on the server's side. As well in this project, it is assumed that the client inputs correct commands.
 
+There seemed to be an issue of printing information out to the client after calling ls command. But if you call it at the end, everything prints out perfectly.
+
 
 Starting the Server and Client:
 
-Start the server: ./main ‘port number for server to execute on’
-EXAMPLE: to start FTP server on port number 58000, execute the following command: ./main 58000
+Start the server: ./myftpserver ‘port number for server to execute on’
+EXAMPLE: to start FTP server on port number 58000, execute the following command: ./myftpserver 58000
 
-Start the client: ./ftpClient ‘127.0.0.1’ ‘same port number the server is executing on’
-EXAMPLE: To start the client on the sever’s machine address, enter “127.0.0.1” on the port corresponding to the server: 58000: ./ftpClient 127.0.0.1 58000
+Start the client: ./myftpclient ‘127.0.0.1’ ‘same port number the server is executing on’
+EXAMPLE: To start the client on the sever’s machine address, enter “127.0.0.1” on the port corresponding to the server: 58000: ./myftpclient 127.0.0.1 58000
 
 
 Commands:
