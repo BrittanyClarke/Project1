@@ -1,12 +1,11 @@
-all: mytftpclient
+all: myftpserver
 
-mytftpclient: mytftpclient.o
-	g++ -o  mytftpclient  mytftpclient.o
+myftpserver: myftpserver.o
+	g++ -o  myftpserver myftpserver.o
 
-mytftpclient.o: mytftpclient.cpp
-	g++ -Wall -g -c mytftpclient.cpp
+myftpserver.o: myftpserver.cpp
+	g++ -Wall -g -c myftpserver.cpp
 
 clean: 
-	rm -f mytftpclient
-	rm -f mytftpclient.o
-
+	rm -f myftpserver
+	rm -f myftpserver.o
