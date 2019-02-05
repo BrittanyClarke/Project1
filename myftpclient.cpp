@@ -70,9 +70,6 @@ int main(int argc, char* argv[]) {
     if(bytesReceived == -1){
       cout << "There was an error getting a response from the server." << endl;
     }
-    /*else{                                                                                                                                                                                                 
-      cout << "SERVER> " << string(buf, bytesReceived) << "\r\n";                                                                                                                                           
-      }*/
   } while(true);
 
   //Close the socket                                                                                                                                                                                        
