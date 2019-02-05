@@ -23,9 +23,9 @@ Compilation Instructions:
 
 Starting the server:
 	~$ cd <path-to-directory>
-	./main ‘port number for server to execute on’ 
-	EXAMPLE: to start FTP server named main on port number 58000, 
-	execute the following command:  ./main 58000
+	./myftpserver ‘port number for server to execute on’ 
+	EXAMPLE: to start FTP server named myftpserver on port number 58000, 
+	execute the following command:  ./myftpserver 58000
 	
 Starting the client:
 	~$cd <path-to-directory>
