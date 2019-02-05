@@ -125,16 +125,54 @@ int main(int argc, char* argv[]) {
 
 		for (buffer = ptr = NULL; ptr == NULL; size *= 2){
 			ptr = getcwd(buffer, size);
-		}
-		cout<<ptr<<endl;		
+		}		
 		//Resend message                                                                                                                                                                               
-		send(clientSocket, ptr, 4096, 0);
+		send(clientSocket, ptr, 256, 0);
 		free(ptr);
 		free(buffer);
 	}
-
+	
+	
 	/**
-	 * if the user inputs ls, it will print out files and
+	 * if the user inputs mkdir, it should include the name of
+	 * the directory to create and will output "Created" once
+	 * the directory is created... you can view this by typing pwd
+	 */
+	size_t found = userInput.find("mkdir");
+	if(found!=string::npos){
+		size_t pos = 1 + userInput.find(' ');
+		size_t pos2 = userInput.find(' ', pos);
+		string dirName = userInput.substr(pos, pos2-pos);
+		mkdir(dirName.c_str(), 0777);
+		send(clientSocket, "Created", 7, 0);
+	}
+	
+	
+	/**
+	 * if the user inputs cd, they should include '..' or
+	 * <directory_name>, and it will change the directory
+	 * location appropriately.. assuming that there is a
+	 * directory of the name they type in.. once it changes
+	 * directories, it will out "Changed"... you can view this
+	 * by typing pwd
+	 */
+	size_t cdFound = userInput.find("cd");
+	if(cdFound !=string::npos){
+		size_t pos = 1 + userInput.find(' ');
+		size_t pos2 = userInput.find(' ', pos);
+		string loc = userInput.substr(pos, pos2-pos);
+		if(loc ==".."){
+			chdir("..");
+		}
+		else{
+			chdir(loc.c_str());
+		}
+		send(clientSocket, "Changed", 7, 0);
+	}
+	
+	
+	/**
+	 *if the user inputs ls, it will print out files and
 	 * directories within the pwd... not including hidden files
 	 */
 	if(userInput == "ls"){
@@ -143,7 +181,6 @@ int main(int argc, char* argv[]) {
 		vector<char*> cvec;
 		DIR * dirp = opendir(dirname);
 		struct dirent * direntp = nullptr;
-		//const char * pathname;
 		string dir(dirname);
 		string path;
 		
@@ -172,53 +209,15 @@ int main(int argc, char* argv[]) {
 		std::sort(std::begin(cvec),std::end(cvec), [](std::string const &name1, std::string const &name2){
 			return name1 < name2;
 		});
-		
-		for(unsigned int i = 0; i < cvec.size(); i++)
-		{
-			printf(cvec[i]);
-			
-			send(clientSocket, cvec[i], 4096, 0);
-			printf("\n");
+		string lsOutput = "";
+		for(unsigned int i = 0; i < cvec.size(); i++){
+			if(i !=0)
+				lsOutput.append(" ");
+			lsOutput.append(cvec[i]);
 		}
+		const char *output = lsOutput.c_str();
+		send(clientSocket, output, 256, 0);
 		closedir(dirp);
-	}
-	
-	/**
-	 * if the user inputs mkdir, it should include the name of
-	 * the directory to create and will output "Created" once
-	 * the directory is created... you can view this by typing pwd
-	 */
-	size_t found = userInput.find("mkdir");
-	if(found!=string::npos){
-		size_t pos = 1 + userInput.find(' ');
-		size_t pos2 = userInput.find(' ', pos);
-		string dirName = userInput.substr(pos, pos2-pos);
-		mkdir(dirName.c_str(), 0777);
-		send(clientSocket, "Created", 7, 0);
-	}
-	
-	/**
-	 * if the user inputs cd, they should include '..' or
-	 * <directory_name>, and it will change the directory
-	 * location appropriately.. assuming that there is a
-	 * directory of the name they type in.. once it changes
-	 * directories, it will out "Changed"... you can view this
-	 * by typing pwd
-	 */
-	size_t cdFound = userInput.find("cd");
-	if(cdFound !=string::npos){
-		size_t pos = 1 + userInput.find(' ');
-		size_t pos2 = userInput.find(' ', pos);
-		string loc = userInput.substr(pos, pos2-pos);
-		if(loc ==".."){
-			chdir("..");
-			
-		}
-		else{
-			chdir(loc.c_str());
-			
-		}
-		send(clientSocket, "Changed", 7, 0);
 	}
   }
   //Close the socket                                                                                                                                                                                        
