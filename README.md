@@ -29,7 +29,8 @@ Starting the client:
 	./ftpClient 127.0.0.1 58000
 
 Commands:
-
+get: copy file with the name <remote_filename> from remote directory to local directory
+EXAMPLE: get <remote_filename>
 
 ls: To view all the files and subdirectories within the current remote directory, type 'ls' and hit 'enter'
 EXAMPLE: myftp> ls
