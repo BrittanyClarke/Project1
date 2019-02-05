@@ -34,6 +34,11 @@ Commands:
 *get*: copy file with the name <remote_filename> from remote directory to local directory
 EXAMPLE: get <remote_filename>
 
+*put*: copy file with the name <local_filename> from local directory to remote directory
+
+*delete*: delete the file with the name <remote_filename> from the remote directory
+EXAMPLE: delete <remote_filename>
+
 *ls*: To view all the files and subdirectories within the current remote directory, type 'ls' and hit 'enter'
 EXAMPLE: myftp> ls
 
