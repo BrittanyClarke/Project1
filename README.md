@@ -29,23 +29,23 @@ Starting the client:
 	./ftpClient 127.0.0.1 58000
 
 Commands:
-get: copy file with the name <remote_filename> from remote directory to local directory
+#get: copy file with the name <remote_filename> from remote directory to local directory
 EXAMPLE: get <remote_filename>
 
-ls: To view all the files and subdirectories within the current remote directory, type 'ls' and hit 'enter'
+#ls: To view all the files and subdirectories within the current remote directory, type 'ls' and hit 'enter'
 EXAMPLE: myftp> ls
 
-cd ..: To change to the parent directory of the remote directory, type 'cd ..' and hit 'enter'
+#cd ..: To change to the parent directory of the remote directory, type 'cd ..' and hit 'enter'
 EXAMPLE: myftp> cd ..
 
-cd <directory_name>: To change to a subdirectory within the current remote directory, type 'cd <directory_name>' and hit 'enter'
+#cd <directory_name>: To change to a subdirectory within the current remote directory, type 'cd <directory_name>' and hit 'enter'
 EXAMPLE: myftp> cd <directory_name>
 
-mkdir <directory_name>: To create a subdirectory within the current remote directory, type 'mkdir <directory_name>' and hit 'enter'
+#mkdir <directory_name>: To create a subdirectory within the current remote directory, type 'mkdir <directory_name>' and hit 'enter'
 EXAMPLE: myftp> mkdir <directory_name>
 
-pwd: To view the current working remote directory, type 'pwd' and hit 'enter'
+#pwd: To view the current working remote directory, type 'pwd' and hit 'enter'
 EXAMPLE: myftp> pwd
 
-quit: To quit the client, type ‘quit’ and hit ‘enter’.
+#quit: To quit the client, type ‘quit’ and hit ‘enter’.
 EXAMPLE: mytftp> quit
