@@ -20,6 +20,7 @@ As well, in order to use get and put, the file and its correct name must exist w
 For the delete command, there is a delete.txt included in the ftpServer directory to make it easier to use the command 'delete delete.txt'
 
 Compilation Instructions:
+
 Starting the server:
 	~$ cd <path-to-directory>
 	./main ‘port number for server to execute on’ 
