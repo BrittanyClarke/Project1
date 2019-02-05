@@ -1,4 +1,4 @@
-//main.cpp                                                                                                                                                                                                  
+//myftpserver.cpp                                                                                                                                                                                                
 #include <netdb.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <dirent.h>
+#include <stdio.h>
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -158,9 +159,9 @@ int main(int argc, char* argv[]) {
 	 */
 	size_t cdFound = userInput.find("cd");
 	if(cdFound !=string::npos){
-		size_t pos = 1 + userInput.find(' ');
-		size_t pos2 = userInput.find(' ', pos);
-		string loc = userInput.substr(pos, pos2-pos);
+		size_t posC = 1 + userInput.find(' ');
+		size_t pos2C = userInput.find(' ', posC);
+		string loc = userInput.substr(posC, pos2C-posC);
 		if(loc ==".."){
 			chdir("..");
 		}
@@ -169,7 +170,24 @@ int main(int argc, char* argv[]) {
 		}
 		send(clientSocket, "Changed", 7, 0);
 	}
-	
+	/**
+	 * if the user inputs delete, it should include the name
+	 * of the file they want to delte and it will appropriately
+	 * remove the file from the directory
+	 */
+	size_t deleteFound = userInput.find("delete");
+	if(deleteFound !=string::npos){
+		size_t posD = 1 + userInput.find(' ');
+		size_t pos2D = userInput.find(' ', posD);
+		string fileName = userInput.substr(posD, pos2D-posD);
+		const char * fileChar = fileName.c_str();
+		if(remove(fileChar) != 0){
+			send(clientSocket, "Error", 5, 0);
+		}
+		else{
+			send(clientSocket, "Deleted", 7, 0);
+		}
+	}
 	
 	/**
 	 *if the user inputs ls, it will print out files and
