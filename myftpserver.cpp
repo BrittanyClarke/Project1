@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
     //Display message                                 
 	string userInput;
 	userInput = string(buf,0,bytesRecv);
-	cout<<"Here is the user's input: "<<userInput<<endl;
+	//cout<<"Here is the user's input: "<<userInput<<endl;
 	
 	/**
 	 * if the user inputs pwd, it will print out the present
@@ -261,7 +261,7 @@ int main(int argc, char* argv[]) {
 		//convert files into chars to use appropriately when copying the file info
 		const char * fileCharLocal = localPathString.c_str();
 		const char * fileCharRemote = fileName.c_str();
-		int fd2 = open(fileCharLocal, O_TRUNC);
+		int fd2 = open(fileCharLocal, O_CREAT,S_IRWXU);
 		int count=0;
 		char buffer[256];
 		int fd1 = open(fileCharRemote,O_RDWR);
@@ -302,7 +302,7 @@ int main(int argc, char* argv[]) {
 		//convert files into chars to use appropriately when copying the file info
 		const char * fileCharLocal = localPathString.c_str();
 		const char * fileCharRemote = fileName.c_str();
-		int fd2 = open(fileCharRemote, O_TRUNC);
+		int fd2 = open(fileCharRemote, O_CREAT,S_IRWXU);
 		int count=0;
 		char buffer[256];
 		int fd1 = open(fileCharLocal,O_RDWR);
