@@ -89,16 +89,16 @@ Two PSQL views were created to complete the query in question #3. **ENSURE THAT 
 ```create view errorPerDay as select count(*) as numErrorPerDay, date(time) as date from log where status!='200 OK' group by date;```
 
 ## Run Program
-	-Install Vagrant and VirtualBox
-	-Install Python 3
-	-Install Udacity folder with Vagrant settings
-	-Download the news database
-	-Open Udacity folder
-	-Launch virtual machine by using vagrant up command
-	-Use ```vagrant ssh``` to ssh into virtual machine
-	-Open vagrant folder
-	-Load the database with ```psql -d news -f newsdata.sql```
-	-Run the database with ```psql -d news```
-	-Create views (further instructions in previous “Create Views” section)
-	-Run file with command python logsAnalysis.py to fetch appropriate query results
+- Install Vagrant and VirtualBox
+- Install Python 3
+- Install Udacity folder with Vagrant settings
+- Download the news database
+- Open Udacity folder
+- Launch virtual machine by using vagrant up command
+- Use ```vagrant ssh``` to ssh into virtual machine
+- Open vagrant folder
+- Load the database with ```psql -d news -f newsdata.sql```
+- Run the database with ```psql -d news```
+- Create views (further instructions in previous “Create Views” section)
+- Run file with command python logsAnalysis.py to fetch appropriate query results
 
