@@ -61,3 +61,44 @@ EXAMPLE: myftp> pwd
 
 *quit*: To quit the client, type ‘quit’ and hit ‘enter’.
 EXAMPLE: mytftp> quit
+
+
+---
+# Logs Analysis Project
+
+## Project Overview
+This project was created following a prompt given for Udacity’s Full-Stack Nanodegree Program. The project requires students to use PostgreSQL and Python to query a large news database. Students must answer the following three questions with this project:
+1. What are the most popular three articles of all time?
+2. Who are the most popular article authors of all time? 
+3. On which days did more than 1% of requests lead to errors?
+
+
+## Requirements 
+Git
+Python 3
+PostgreSQL
+Vagrant
+VirtualBox
+
+## Create Views
+Two PSQL views were created to complete the query in question #3. **ENSURE THAT VIEWS ARE CREATED BEFORE RUNNING THE PROJECT (logsAnalysis.py )**
+#First View : 
+```create view countPerDay select count(*) as numPerDay, date(time) as date from log group by date;```
+
+#Second View:
+```create view errorPerDay as select count(*) as numErrorPerDay, date(time) as date from log where status!='200 OK' group by date;```
+
+## Run Program
+Install Vagrant and VirtualBox
+Install Python 3
+Install Udacity folder with Vagrant settings
+Download the news database
+Open Udacity folder
+Launch virtual machine by using vagrant up command
+Use ```vagrant ssh``` to ssh into virtual machine
+Open vagrant folder
+Load the database with ```psql -d news -f newsdata.sql```
+Run the database with ```psql -d news```
+Create views (further instructions in previous “Create Views” section)
+Run file with command python logsAnalysis.py to fetch appropriate query results
+
